@@ -1,9 +1,12 @@
-// Лабораторная №1 Эссаулов Андрей M80-207Б-18
-// Создать класс BritishMoney для работы с денежными суммами в старой британской система. Сумма
-// денег должна быть представлено тремя полями: типа unsigned long long для фунтов стерлингов, типа
-// unsigned char – для шиллингов, unsigned char – для пенсов (пенни). Реализовать сложение сумм,
-// вычитание, деление сумм, деление суммы на дробное число, умножение на дробное число и операции
-// сравнения. 1 фунт = 20 шиллингов, 1 шиллинг = 12 пенни.
+// Лабораторная №2 Эссаулов Андрей M80-207Б-18
+// Создать класс BritishMoney для работы с денежными суммами в старой британской система.
+// Сумма денег должна быть представлено тремя полями: типа unsigned long long для фунтов стерлингов,
+// типа unsigned char – для шиллингов, unsigned char – для пенсов (пенни).
+// Реализовать сложение сумм, вычитание, деление сумм, деление суммы на дробное число, умножение на дробное число и операции сравнения.
+// 1 фунт = 20 шиллингов, 1 шиллинг = 12 пенни.  
+// Операции сложения, вычитания, умножения, деления, сравнения (на равенство, больше и меньше)
+// должны быть выполнены в виде перегрузки операторов. 
+// Необходимо реализовать пользовательский литерал для работы с константами типа BritishMoney
 #include <iostream>
 
 class BritishMoney
@@ -31,7 +34,7 @@ class BritishMoney
     unsigned char pennys;
 };
 
-BritishMoney summ (const BritishMoney a, const BritishMoney b)
+BritishMoney operator+ (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0, 0, 0);
     if (a.pennys + b.pennys > UINT8_MAX)
@@ -59,7 +62,7 @@ BritishMoney summ (const BritishMoney a, const BritishMoney b)
     return result;
 } 
 
-BritishMoney subtraction (const BritishMoney a, const BritishMoney b)
+BritishMoney operator- (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0, 0 ,0);
     int p, s, f = 0;
@@ -137,7 +140,7 @@ BritishMoney subtraction (const BritishMoney a, const BritishMoney b)
     return result;
 }
 
-BritishMoney divide (const BritishMoney a, const BritishMoney b)
+BritishMoney operator/ (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0, 0, 0);
     if (b.pennys != 0) result.pennys = a.pennys / b.pennys; else result.pennys = a.pennys;
@@ -146,7 +149,7 @@ BritishMoney divide (const BritishMoney a, const BritishMoney b)
     return result;
 }
 
-BritishMoney divide (const BritishMoney a, const float b)
+BritishMoney operator/ (const BritishMoney a, const float b)
 {
     BritishMoney result(0,0,0);
     if (b != 0)
@@ -164,7 +167,7 @@ BritishMoney divide (const BritishMoney a, const float b)
     return result;
 }
 
-BritishMoney multiplication (const BritishMoney a, const float b)
+BritishMoney operator* (const BritishMoney a, const float b)
 {
     BritishMoney result(0,0,0);
     result.pennys = a.pennys * b;
@@ -173,7 +176,7 @@ BritishMoney multiplication (const BritishMoney a, const float b)
     return result;
 }
 
-bool equal (const BritishMoney a, const BritishMoney b)
+bool operator== (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0,0,0);
     unsigned long long first, second;
@@ -182,7 +185,7 @@ bool equal (const BritishMoney a, const BritishMoney b)
     return (first==second?true:false);
 }
 
-bool morethan (const BritishMoney a, const BritishMoney b)
+bool operator> (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0,0,0);
     unsigned long long first, second;
@@ -191,7 +194,7 @@ bool morethan (const BritishMoney a, const BritishMoney b)
     return (first>second?true:false);
 }
 
-bool lessthan (const BritishMoney a, const BritishMoney b)
+bool operator< (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0,0,0);
     unsigned long long first, second;
@@ -200,7 +203,7 @@ bool lessthan (const BritishMoney a, const BritishMoney b)
     return (first<second?true:false);
 }
 
-bool moreequalthan (const BritishMoney a, const BritishMoney b)
+bool operator>= (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0,0,0);
     unsigned long long first, second;
@@ -209,7 +212,7 @@ bool moreequalthan (const BritishMoney a, const BritishMoney b)
     return (first>=second?true:false);
 }
 
-bool lessequalthan (const BritishMoney a, const BritishMoney b)
+bool operator<= (const BritishMoney a, const BritishMoney b)
 {
     BritishMoney result(0,0,0);
     unsigned long long first, second;
@@ -245,36 +248,36 @@ int main()
     switch (switch_var)
     {
     case 1:
-        summ(first, second).WriteMoney();
+        (first + second).WriteMoney();
         break;
     case 2:
-        subtraction(first, second ).WriteMoney();
+        (first - second).WriteMoney();
         break;
     case 3:
-        divide(first, second).WriteMoney();
+        (first / second).WriteMoney();
         break;
     case 4:
         std::cout << "Enter divider" << std::endl;
         int div;
         std::cin >> div;
-        divide(first, div).WriteMoney();
+        (first / div).WriteMoney();
         break;
     case 5:
         std::cout << "Enter multiplier" << std::endl;
         int mul;
         std::cin >> mul;
-        multiplication(first, mul).WriteMoney();
+        (first * mul).WriteMoney();
         break;
     case 6:
-        if (morethan(first, second)) std::cout << "first > second - true" << std::endl;
+        if (first > second) std::cout << "first > second - true" << std::endl;
         else std::cout << "first > second - false" << std::endl;
         break;
     case 7:
-        if (lessthan(first, second)) std::cout << "first < second - true" << std::endl;
+        if (first < second) std::cout << "first < second - true" << std::endl;
         else std::cout << "first < second - false" << std::endl;
         break;
     case 8:
-        if (equal(first, second)) std::cout << "first == second - true" << std::endl;
+        if (first == second) std::cout << "first == second - true" << std::endl;
         else std::cout << "first == second - false" << std::endl;
         break;                    
     default:
