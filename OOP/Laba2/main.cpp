@@ -1,9 +1,6 @@
 // Лабораторная №2 Эссаулов Андрей M80-207Б-18
 // Создать класс BritishMoney для работы с денежными суммами в старой британской система.
-// Сумма денег должна быть представлено тремя полями: типа unsigned long long для фунтов стерлингов,
-// типа unsigned char – для шиллингов, unsigned char – для пенсов (пенни).
-// Реализовать сложение сумм, вычитание, деление сумм, деление суммы на дробное число, умножение на дробное число и операции сравнения.
-// 1 фунт = 20 шиллингов, 1 шиллинг = 12 пенни.  
+// Сумма денег должна быть представлено тремя полями: типа unsigned long long для фунтов стерлингов, типа unsigned char – для шиллингов, unsigned char – для пенсов (пенни). Реализовать сложение сумм, вычитание, деление сумм, деление суммы на дробное число, умножение на дробное число и операции сравнения. 1 фунт = 20 шиллингов, 1 шиллинг = 12 пенни.  
 // Операции сложения, вычитания, умножения, деления, сравнения (на равенство, больше и меньше)
 // должны быть выполнены в виде перегрузки операторов. 
 // Необходимо реализовать пользовательский литерал для работы с константами типа BritishMoney
@@ -221,69 +218,127 @@ bool operator<= (const BritishMoney a, const BritishMoney b)
     return (first<=second?true:false);
 }
 
+BritishMoney operator "" _f(unsigned long long funts)
+{
+    return BritishMoney(funts, 0, 0);
+};
+
+BritishMoney operator "" _s(unsigned long long shil)
+{
+    return BritishMoney(0, shil, 0);
+};
+
+BritishMoney operator "" _p(unsigned long long pen)
+{
+    return BritishMoney(0, 0, pen);
+};
+
 int main()
 {
-    BritishMoney first(0, 0 , 0);
-    BritishMoney second(0, 0, 0);
-    int bufs, bufp;
-    std::cout << "Enter first bill\nfunts\t shilings\t pennys" << std::endl;
-    std::cin >> first.funts >> bufs >> bufp;
-    first.shilings = bufs;
-    first.pennys = bufp;
-    std::cout << "--------------------------------------------" << std::endl << std::endl;
+    // 1 (+)
+    BritishMoney test11 = 2_f + 6_s + 17_p;
+    BritishMoney test12 = 4_f + 8_s + 20_p;
+    
+    // 2 (-)
+    BritishMoney test21 = 0_f + 2_s + 10_p;
+    BritishMoney test22 = 0_f + 1_s + 12_p;
 
+    // 3 (/)
+    BritishMoney test31 = 8_f + 12_s + 7_p;
+    BritishMoney test32 = 0_f + 1_s + 2_p;
 
-    std::cout << "Enter second bill\nfunts\t shilings\t pennys" << std::endl;
-    std::cin >> second.funts >> bufs >> bufp;
-    second.shilings = bufs;
-    second.pennys = bufp;
-    std::cout << "--------------------------------------------" << std::endl << std::endl;
+    int tests = 0;
 
-    std::cout << "Enter operation code: " << std::endl << "1) +" << std::endl << "2) -" << std::endl << "3) /"
-    << std::endl << "4) / (float)" << std::endl << "5) * (float)" << std::endl << "6) >"<< std::endl << "7) <"
-    << std::endl << "8) ==" << std::endl;
-    int switch_var;
-    std::cin >> switch_var;
-
-    switch (switch_var)
+    std::cout << "1) Start tests \n2) Start custom input" << std::endl;
+    std::cin >> tests;
+    if (tests == 1)
     {
-    case 1:
-        (first + second).WriteMoney();
-        break;
-    case 2:
-        (first - second).WriteMoney();
-        break;
-    case 3:
-        (first / second).WriteMoney();
-        break;
-    case 4:
-        std::cout << "Enter divider" << std::endl;
-        int div;
-        std::cin >> div;
-        (first / div).WriteMoney();
-        break;
-    case 5:
-        std::cout << "Enter multiplier" << std::endl;
-        int mul;
-        std::cin >> mul;
-        (first * mul).WriteMoney();
-        break;
-    case 6:
-        if (first > second) std::cout << "first > second - true" << std::endl;
-        else std::cout << "first > second - false" << std::endl;
-        break;
-    case 7:
-        if (first < second) std::cout << "first < second - true" << std::endl;
-        else std::cout << "first < second - false" << std::endl;
-        break;
-    case 8:
-        if (first == second) std::cout << "first == second - true" << std::endl;
-        else std::cout << "first == second - false" << std::endl;
-        break;                    
-    default:
-        std::cout << "Uncorrect enter" << std::endl;
-        break;
+        // First test
+        std::cout << "First test. Testing literals and operator plus \n funts shillings pennys" << std::endl;
+        std::cout << test11.funts << " " << (int)test11.shilings << " " << (int)test11.pennys << std::endl;
+        std::cout << test12.funts << " " << (int)test12.shilings << " " << (int)test12.pennys << std::endl;
+        BritishMoney test13 = test11 + test12;
+        std::cout << "Result: \n" << test13.funts << " " << (int)test13.shilings << " " << (int)test13.pennys << std::endl << std::endl;
+        //Second Test
+        std::cout << "Second test. Testing literals and operator minus \n funts shillings pennys" << std::endl;
+        std::cout << test21.funts << " " << (int)test21.shilings << " " << (int)test21.pennys << std::endl;
+        std::cout << test22.funts << " " << (int)test22.shilings << " " << (int)test22.pennys << std::endl;
+        BritishMoney test23 = test21 - test22;
+        std::cout << "Result: \n" << test23.funts << " " << (int)test23.shilings << " " << (int)test23.pennys << std::endl << std::endl;
+        //Third Test
+        std::cout << "Third test. Testing literals and operator divide \n funts shillings pennys" << std::endl;
+        std::cout << test31.funts << " " << (int)test31.shilings << " " << (int)test31.pennys << std::endl;
+        std::cout << test32.funts << " " << (int)test32.shilings << " " << (int)test32.pennys << std::endl;
+        BritishMoney test33 = test31 - test32;
+        std::cout << "Result: \n" << test33.funts << " " << (int)test33.shilings << " " << (int)test33.pennys << std::endl;
     }
+    else if(tests == 2)
+    {
+        BritishMoney first(0, 0 , 0);
+        BritishMoney second(0, 0, 0);
+        int bufs, bufp;
+        std::cout << "Enter first bill\nfunts\t shilings\t pennys" << std::endl;
+        std::cin >> first.funts >> bufs >> bufp;
+        first.shilings = bufs;
+        first.pennys = bufp;
+        std::cout << "--------------------------------------------" << std::endl << std::endl;
 
+
+        std::cout << "Enter second bill\nfunts\t shilings\t pennys" << std::endl;
+        std::cin >> second.funts >> bufs >> bufp;
+        second.shilings = bufs;
+        second.pennys = bufp;
+        std::cout << "--------------------------------------------" << std::endl << std::endl;
+
+        std::cout << "Enter operation code: " << std::endl << "1) +" << std::endl << "2) -" << std::endl << "3) /"
+        << std::endl << "4) / (float)" << std::endl << "5) * (float)" << std::endl << "6) >"<< std::endl << "7) <"
+        << std::endl << "8) ==" << std::endl;
+        int switch_var;
+        std::cin >> switch_var;
+
+        switch (switch_var)
+        {
+        case 1:
+            (first + second).WriteMoney();
+            break;
+        case 2:
+            (first - second).WriteMoney();
+            break;
+        case 3:
+            (first / second).WriteMoney();
+            break;
+        case 4:
+            std::cout << "Enter divider" << std::endl;
+            int div;
+            std::cin >> div;
+            (first / div).WriteMoney();
+            break;
+        case 5:
+            std::cout << "Enter multiplier" << std::endl;
+            int mul;
+            std::cin >> mul;
+            (first * mul).WriteMoney();
+            break;
+        case 6:
+            if (first > second) std::cout << "first > second - true" << std::endl;
+            else std::cout << "first > second - false" << std::endl;
+            break;
+        case 7:
+            if (first < second) std::cout << "first < second - true" << std::endl;
+            else std::cout << "first < second - false" << std::endl;
+            break;
+        case 8:
+            if (first == second) std::cout << "first == second - true" << std::endl;
+            else std::cout << "first == second - false" << std::endl;
+            break;                    
+        default:
+            std::cout << "Uncorrect enter" << std::endl;
+            break;
+        }
+    }
+    else 
+    {
+        std::cout << "wrong input" << std::endl;
+    }
     return 1;
 }
