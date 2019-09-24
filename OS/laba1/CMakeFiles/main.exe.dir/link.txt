@@ -1,0 +1,1 @@
+/usr/bin/cc   -Wl,--enable-auto-import CMakeFiles/main.exe.dir/main.c.o  -o main.exe.exe -Wl,--out-implib,libmain.exe.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
