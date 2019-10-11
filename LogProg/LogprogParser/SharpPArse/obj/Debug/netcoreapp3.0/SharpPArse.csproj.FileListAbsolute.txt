@@ -1,0 +1,11 @@
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.exe
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.deps.json
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.runtimeconfig.json
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.runtimeconfig.dev.json
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.dll
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\bin\Debug\netcoreapp3.0\SharpPArse.pdb
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\obj\Debug\netcoreapp3.0\SharpPArse.csprojAssemblyReference.cache
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\obj\Debug\netcoreapp3.0\SharpPArse.AssemblyInfoInputs.cache
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\obj\Debug\netcoreapp3.0\SharpPArse.AssemblyInfo.cs
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\obj\Debug\netcoreapp3.0\SharpPArse.dll
+D:\YaDisk\YandexDisk\МАИ\Andrew\2 курс\labs\University\LogProg\LogprogParser\SharpPArse\obj\Debug\netcoreapp3.0\SharpPArse.pdb

@@ -3,13 +3,25 @@
 #include <time.h>
 
 // Command format
-// <operation code>.<argument>.<argument>
+// <operation code>.<argument>
 // Operation codes
 // 1 - Create tree,     args - int(root node value)
 // 2 - Add node,        args - int(node value)
 // 3 - Delete node,     args - int(node value)
 // 4 - Give all tree,   args - null
 // 5 - End work,        args - null
+// TODO: Добавить поиск по существованию нода
+// TODO: Убрать sleep
+// TODO: Закрыть handle у processInfo
+// TODO: Сделать бинарную передачу данных
+
+// Пакет:
+// WriteBuffer[0] - кол-во байт для чтения
+// WriteBuffer[1] - комманда для исполнения
+// WriteBuffer[2] - аргумент
+// WriteBuffer[3] - аргумент
+// ...
+// WriteBuffer[N] - данные
 
 int main()
 {
@@ -37,6 +49,8 @@ int main()
 
     TCHAR ReadBuffer[256];
     TCHAR WriteBuffer[256];
+    TCHAR Package[3];
+    
     DWORD readed;
     if(!ConnectNamedPipe(hPipe, NULL))
     {
@@ -47,10 +61,64 @@ int main()
 
     while (1)
     {
-        Sleep(100);
         printf("\n>");
-        scanf("%s", &WriteBuffer);
-        switch(WriteBuffer[0]){
+        int inputReaded; //= scanf("%s", &WriteBuffer);
+        ReadFile(stdin, WriteBuffer, 3, inputReaded, NULL);
+        printf("Count of read %d\n", inputReaded);
+        if(isdigit(WriteBuffer[0]))
+        {
+            printf("Here\n");
+            Package[1] = WriteBuffer[0];
+            if(inputReaded > 1)
+            {
+                printf("Here\n");
+                if (WriteBuffer[1] == '.')
+                {
+                    printf("Here\n");
+                    if (inputReaded > 2)
+                    {
+                        printf("Here\n");
+                        if (isdigit(WriteBuffer[2]))
+                        {
+                            printf("Here\n");
+                            Package[2] = WriteBuffer[2]; 
+                            Package[0] = 2; // 2 byte to read
+                        }
+                        else
+                        {
+                            Package[0] = '-';
+                            printf("Wrong argument\n");
+                        }
+                    }
+                    else
+                    {
+                        Package[0] = '-';
+                        printf("No arguments\n");
+                    }
+                }
+                else
+                {
+                    Package[0] = '-';
+                    printf("Required ',' between command and argument\n");
+                }
+            }
+            else if (WriteBuffer[0] == '4')
+            {
+                Package[0] = '1'; // 1 byte to read
+            }
+            else
+            {
+                Package[0] = '-';
+                printf("No arguments for command\n");
+            }
+        }
+        else 
+        {
+            Package[0] = '-';
+            printf("Wrong input\n");
+        }
+
+        if(Package[0] != '-') switch(WriteBuffer[0]){
             case '4':
                 WriteFile(hPipe, WriteBuffer, strlen(WriteBuffer), &readed, NULL);
                 Sleep(100);
@@ -66,14 +134,10 @@ int main()
             case '5':
                 WriteFile(hPipe, WriteBuffer, strlen(WriteBuffer), &readed, NULL);
                 CloseHandle(hPipe);
-                Sleep(200);
                 printf("Client: Exit process\n");
                 return 0;
             default:
-                WriteFile(hPipe, WriteBuffer, strlen(WriteBuffer), &readed, NULL);
-                Sleep(100);
-                ReadFile(hPipe, ReadBuffer, 256, &readed, NULL);
-                printf("Client: Message from server - %s\n", ReadBuffer);
+                printf("Client: Wrong input\n");
                 break;
         }
     }

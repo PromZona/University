@@ -253,7 +253,7 @@ int main()
 				printf("Server: Tree cleared. Pipe closed. Process shut down...\n");
 				return 0;
 			default:
-				printf("Server: Cannot parse operation code. %d\n", ReadBuf[0]-48);
+				//printf("Server: Cannot parse operation code. %d\n", ReadBuf[0]-48);
 				strcpy(WriteBuf, TEXT("Unknown operation code"));
 				WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
 				break;
