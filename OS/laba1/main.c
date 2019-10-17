@@ -9,10 +9,9 @@
 // 2 - Add node,        args - int(node value)
 // 3 - Delete node,     args - int(node value)
 // 4 - Give all tree,   args - null
-// 5 - End work,        args - null
+// 5 - Is node exist,   args - int(node value)
+// 6 - End work,        args - null
 // TODO: Добавить поиск по существованию нода
-// TODO: Убрать sleep
-// TODO: Закрыть handle у processInfo
 // TODO: Сделать бинарную передачу данных
 
 // Пакет:
@@ -46,11 +45,6 @@ int main()
     }
     else printf("Client: Pipe created\n");
     
-
-    TCHAR ReadBuffer[256];
-    TCHAR WriteBuffer[256];
-    TCHAR Package[3];
-    
     DWORD readed;
     if(!ConnectNamedPipe(hPipe, NULL))
     {
@@ -62,33 +56,37 @@ int main()
     while (1)
     {
         printf("\n>");
-        int inputReaded; //= scanf("%s", &WriteBuffer);
-        ReadFile(stdin, WriteBuffer, 3, inputReaded, NULL);
-        printf("Count of read %d\n", inputReaded);
+        TCHAR ReadBuffer[256];
+        TCHAR WriteBuffer[256];
+        TCHAR Package[3];
+        int inputReaded = scanf("%s", &WriteBuffer);
+        fflush(stdin);
+        inputReaded = strlen(WriteBuffer);
         if(isdigit(WriteBuffer[0]))
         {
-            printf("Here\n");
-            Package[1] = WriteBuffer[0];
+            Package[1] = WriteBuffer[0] - '0';
             if(inputReaded > 1)
             {
-                printf("Here\n");
                 if (WriteBuffer[1] == '.')
                 {
-                    printf("Here\n");
                     if (inputReaded > 2)
                     {
-                        printf("Here\n");
-                        if (isdigit(WriteBuffer[2]))
+                        Package[0] = 2; // bytes to read
+                        int size = 0;
+                        for(int i = 2; i < inputReaded; i++)
                         {
-                            printf("Here\n");
-                            Package[2] = WriteBuffer[2]; 
-                            Package[0] = 2; // 2 byte to read
+                            if (isdigit(WriteBuffer[i]))
+                            {
+                                size = (size*10) + (WriteBuffer[i] - '0'); 
+                            }
+                            else
+                            {
+                                Package[0] = '-';
+                                printf("Wrong argument\n");
+                                break;
+                            }
                         }
-                        else
-                        {
-                            Package[0] = '-';
-                            printf("Wrong argument\n");
-                        }
+                        Package[2] = size;
                     }
                     else
                     {
@@ -99,10 +97,14 @@ int main()
                 else
                 {
                     Package[0] = '-';
-                    printf("Required ',' between command and argument\n");
+                    printf("Required '.' between command and argument\n");
                 }
             }
             else if (WriteBuffer[0] == '4')
+            {
+                Package[0] = '1'; // 1 byte to read
+            }
+            else if (WriteBuffer[0] == '6')
             {
                 Package[0] = '1'; // 1 byte to read
             }
@@ -117,11 +119,12 @@ int main()
             Package[0] = '-';
             printf("Wrong input\n");
         }
-
-        if(Package[0] != '-') switch(WriteBuffer[0]){
+        
+        if(Package[0] != '-')
+        {
+            switch(WriteBuffer[0]){
             case '4':
-                WriteFile(hPipe, WriteBuffer, strlen(WriteBuffer), &readed, NULL);
-                Sleep(100);
+                WriteFile(hPipe, Package, strlen(Package), &readed, NULL);
                 printf("Client: Tree (Readed byte - %d): \n", readed);
                 ReadFile(hPipe, ReadBuffer, 256, &readed, NULL);
                 printf("%s", ReadBuffer);
@@ -131,16 +134,50 @@ int main()
                     printf("%s", ReadBuffer);
                 }
                 break;
-            case '5':
-                WriteFile(hPipe, WriteBuffer, strlen(WriteBuffer), &readed, NULL);
+            case '6':
+                WriteFile(hPipe, Package, strlen(Package), &readed, NULL);
                 CloseHandle(hPipe);
                 printf("Client: Exit process\n");
                 return 0;
             default:
-                printf("Client: Wrong input\n");
+                //printf("Package size - %d\n", Package[0]);
+                //printf("Operation code - %d\n", Package[1]);
+                //printf("Argument - %d\n", Package[2]);
+                if(!WriteFile(hPipe, Package, strlen(Package), &readed, NULL)) // Send package
+                {
+                    printf("Clie: WriteFile Fucked up\n------------\n");
+                } 
+                while(!ReadFile(hPipe, ReadBuffer, 1, &readed, NULL)) // Read sucess code
+                {
+                    printf("Clie: ReadFile Fucked up\n-----%d---%c----\n", GetLastError(), ReadBuffer[0]); // Read sucess code
+                } 
+                
+                if(ReadBuffer[0] == 1)
+                {
+                    printf("Server: complete\n");
+                }
+                if(ReadBuffer[0] == 2)
+                {
+                    printf("Server: Not Enough Arguments\n");
+                }
+                if(ReadBuffer[0] == 3)
+                {
+                    printf("Server: Root is NULL\n");
+                }
+                if(ReadBuffer[0] == 4)
+                {
+                    printf("Server: Unknown operation code\n");
+                }
                 break;
+            }
+        }
+        else
+        {
+            printf("Client: Wrong input\n");
         }
     }
+    CloseHandle(processInfo.hProcess);
+    CloseHandle(processInfo.hThread);
     CloseHandle(hPipe);
     return 0;
 }

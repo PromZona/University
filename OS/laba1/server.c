@@ -161,101 +161,96 @@ void sendTree(Node* root, HANDLE pipe, int depth)
 
 
 #define BUFSIZE 256
+#define OK 1
+#define NOT_ENOUGH_ARRGUMENTS 2
+#define ROOT_IS_NULL 3
+#define UNKNOWN_OPERATION_CODE 4
+
 
 int main()
 {
    	LPTSTR PipeName = TEXT("\\\\.\\pipe\\DronPipeName");
    	LPTSTR WritetoClient = TEXT("messageFromServer");
-   	TCHAR ReadBuf[BUFSIZE];
-	TCHAR WriteBuf[BUFSIZE];
    	DWORD readedByte;
 	HANDLE hPipe = CreateFile(PipeName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 	if(hPipe == INVALID_HANDLE_VALUE)
     {
-        printf("Server: Invalid pipe\n");
         return -1;
     }
-    else printf("Server: Pipe connected\n");
 
 	Node* root = NULL;
 	while(1)
 	{
-		ReadFile(hPipe, ReadBuf, BUFSIZE, &readedByte, NULL);
+		int PackageSize;
+		TCHAR ReadBuf[BUFSIZE];
+		TCHAR WriteBuf[BUFSIZE];
+		TCHAR WrSizeBuf[2];
+		int result = 0;
+		if(!ReadFile(hPipe, ReadBuf, 1, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
+		//printf("First Package size received - %d\n", readedByte);
+		PackageSize = ReadBuf[0];
+		if(!ReadFile(hPipe, ReadBuf, PackageSize, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
+		//printf("Operation code received - %d\n", ReadBuf[0]);
+		//printf("Argument - %d\n", ReadBuf[1]);
+		//printf("Second Package size received - %d\n", readedByte);
 		switch(ReadBuf[0]){
-			case '1':
-				printf("Server: Execute command 1. Readed byte - %d\n", readedByte);
-				if(readedByte > 2)
+			case 1:
+				if(PackageSize > 1)
 				{
-					root = createTree(ReadBuf[2]-48);
-					strcpy(WriteBuf, TEXT("Complete"));
-					WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+					root = createTree(ReadBuf[1]);
+					result = OK;
 				}
 				else 
 				{
-					strcpy(WriteBuf, TEXT("Sended not enough arguments"));
-					WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+					result = NOT_ENOUGH_ARRGUMENTS;
 				}
+				WrSizeBuf[0] = result;
+				WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
 				break;
-			case '2':
-				printf("Server: Execute command 2. Readed byte - %d\n", readedByte);
-				if( readedByte > 2)
+			case 2:
+				if(PackageSize > 1)
 				{
 					if (root)
 					{
-						addNode(root, ReadBuf[2]-48);
-						strcpy(WriteBuf, TEXT("Complete"));
-						WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+						addNode(root, ReadBuf[1]);
+						result = OK;
 					}
-					else
-					{
-						strcpy(WriteBuf, TEXT("Root is NULL"));
-						WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
-					}
+					else result = ROOT_IS_NULL; // root is null
 				}
-				else
-				{
-					strcpy(WriteBuf, TEXT("Sended not enough arguments"));
-					WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
-				} 
+				else result = NOT_ENOUGH_ARRGUMENTS; // not enough arguments
+				WrSizeBuf[0] = result;
+				if(!WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL)) printf("Serv: WriteFucked up\n");
 				break;
-			case '3':
-				printf("Server: Execute command 3. Readed byte - %d\n", readedByte);
-				if(readedByte > 2)
+			case 3:
+				if(PackageSize > 1)
 				{
 					if(root)
 					{
-						deleteNode(root, ReadBuf[2]-48);
-						strcpy(WriteBuf, TEXT("Complete"));
-						WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+						deleteNode(root, ReadBuf[1]);
+						strcpy(WriteBuf, TEXT("Server: Complete"));
 					}
-					else
-					{
-						strcpy(WriteBuf, TEXT("Root is NULL"));
-						WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
-					}
+					else strcpy(WriteBuf, TEXT("Server: Root is NULL"));
 				}
-				else
-				{
-					strcpy(WriteBuf, TEXT("Sended not enough arguments"));
-					WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
-				}
+				else strcpy(WriteBuf, TEXT("Server: Sended not enough arguments"));
+				WrSizeBuf[0] = strlen(WriteBuf);
+				WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
+				WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
 				break;
-			case '4':
-				printf("Server: Execute command 4. Readed byte - %d\n", readedByte);
+			case 4:
 				sendTree(root, hPipe, 0);
 				strcpy(WriteBuf, TEXT("Good"));
-				WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+				WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
 				break;
-			case '5':
-				printf("Server: Execute command 5. Readed byte - %d\n", readedByte);
+			case 5:
+
+				break;
+			case 6:
 				free(root);
 				CloseHandle(hPipe);
-				printf("Server: Tree cleared. Pipe closed. Process shut down...\n");
 				return 0;
 			default:
-				//printf("Server: Cannot parse operation code. %d\n", ReadBuf[0]-48);
-				strcpy(WriteBuf, TEXT("Unknown operation code"));
-				WriteFile(hPipe, WriteBuf, 256, &readedByte, NULL);
+				result = UNKNOWN_OPERATION_CODE;
+				WriteFile(hPipe, result, 1, &readedByte, NULL);
 				break;
 		}
 	}
