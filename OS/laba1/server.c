@@ -159,12 +159,22 @@ void sendTree(Node* root, HANDLE pipe, int depth)
 	sendTree(root->left, pipe, depth+1);
 }
 
+WINBOOL isContain(Node* root, int value)
+{
+	if (root == NULL) return FALSE;
+	if(value > root->value) isContain(root->right, value);
+	else if(value < root->value) isContain(root->left, value);
+	else if(value == root->value) return TRUE;
+	else return FALSE;
+}
 
 #define BUFSIZE 256
 #define OK 1
 #define NOT_ENOUGH_ARRGUMENTS 2
 #define ROOT_IS_NULL 3
 #define UNKNOWN_OPERATION_CODE 4
+#define CUSTOM_TRUE 5
+#define CUSTOM_FALSE 6
 
 
 int main()
@@ -187,12 +197,8 @@ int main()
 		TCHAR WrSizeBuf[2];
 		int result = 0;
 		if(!ReadFile(hPipe, ReadBuf, 1, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
-		//printf("First Package size received - %d\n", readedByte);
 		PackageSize = ReadBuf[0];
 		if(!ReadFile(hPipe, ReadBuf, PackageSize, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
-		//printf("Operation code received - %d\n", ReadBuf[0]);
-		//printf("Argument - %d\n", ReadBuf[1]);
-		//printf("Second Package size received - %d\n", readedByte);
 		switch(ReadBuf[0]){
 			case 1:
 				if(PackageSize > 1)
@@ -227,14 +233,13 @@ int main()
 					if(root)
 					{
 						deleteNode(root, ReadBuf[1]);
-						strcpy(WriteBuf, TEXT("Server: Complete"));
+						result = OK;
 					}
-					else strcpy(WriteBuf, TEXT("Server: Root is NULL"));
+					else result = ROOT_IS_NULL;
 				}
-				else strcpy(WriteBuf, TEXT("Server: Sended not enough arguments"));
-				WrSizeBuf[0] = strlen(WriteBuf);
+				else result = NOT_ENOUGH_ARRGUMENTS;
+				WrSizeBuf[0] = result;
 				WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
-				WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
 				break;
 			case 4:
 				sendTree(root, hPipe, 0);
@@ -242,7 +247,10 @@ int main()
 				WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
 				break;
 			case 5:
-
+				if (isContain(root, ReadBuf[1])) result = CUSTOM_TRUE;
+				else result = CUSTOM_FALSE;
+				WrSizeBuf[0] = result;
+				WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
 				break;
 			case 6:
 				free(root);
@@ -258,19 +266,3 @@ int main()
 	ExitProcess(1);
     return 0;
 }
-/*
- CHAR chBuf[8]; 
-	DWORD readed;
-	const char ept[] = "Uho";
-	ReadFile(GetStdHandle(STD_INPUT_HANDLE), chBuf, 4, &readed, NULL);
-	WriteFile(GetStdHandle(STD_INPUT_HANDLE), ept, 4, &readed, NULL);
-
-HANDLE hFile; 
-    LPCSTR lol = (LPCSTR)chBuf;  
-  hFile = CreateFileA(lol, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
-	
-    if (hFile == INVALID_HANDLE_VALUE) 
-    { 
-        HANDLE meh = CreateFileA("Fucked.txt", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
-        return 0;
-    }*/
