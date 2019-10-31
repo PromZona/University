@@ -196,9 +196,9 @@ int main()
 		TCHAR WriteBuf[BUFSIZE];
 		TCHAR WrSizeBuf[2];
 		int result = 0;
-		if(!ReadFile(hPipe, ReadBuf, 1, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
+		if(!ReadFile(hPipe, ReadBuf, 1, &readedByte, NULL)) printf("Serv: ReadFile\n------------\n");
 		PackageSize = ReadBuf[0];
-		if(!ReadFile(hPipe, ReadBuf, PackageSize, &readedByte, NULL)) printf("Serv: ReadFile Fucked up\n------------\n");
+		if(!ReadFile(hPipe, ReadBuf, PackageSize, &readedByte, NULL)) printf("Serv: ReadFile\n------------\n");
 		switch(ReadBuf[0]){
 			case 1:
 				if(PackageSize > 1)
@@ -232,7 +232,7 @@ int main()
 				{
 					if(root)
 					{
-						deleteNode(root, ReadBuf[1]);
+						root = deleteNode(root, ReadBuf[1]);
 						result = OK;
 					}
 					else result = ROOT_IS_NULL;
@@ -242,9 +242,23 @@ int main()
 				WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
 				break;
 			case 4:
-				sendTree(root, hPipe, 0);
-				strcpy(WriteBuf, TEXT("Good"));
-				WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
+				if (root != NULL)
+				{
+					printf("root is not null\n");
+					result = OK;
+					WrSizeBuf[0] = result;
+					WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
+					sendTree(root, hPipe, 0);
+					strcpy(WriteBuf, TEXT("Good"));
+					WriteFile(hPipe, WriteBuf, strlen(WriteBuf), &readedByte, NULL);
+				}
+				else
+				{
+					printf("root is null\n");
+					result = ROOT_IS_NULL;
+					WrSizeBuf[0] = result;
+					WriteFile(hPipe, WrSizeBuf, 1, &readedByte, NULL);
+				}
 				break;
 			case 5:
 				if (isContain(root, ReadBuf[1])) result = CUSTOM_TRUE;

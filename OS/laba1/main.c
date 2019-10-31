@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <windows.h>
-#include <time.h>
 
 // Command format
 // <operation code>.<argument>
@@ -34,7 +33,6 @@ int main()
         printf("Client: Created\n");
     }
     else printf("Client: Error cannot create process. # - %d", GetLastError());
-
     HANDLE hPipe = CreateNamedPipeA(PipeName,
                                     PIPE_ACCESS_DUPLEX,
                                     PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
@@ -130,14 +128,22 @@ int main()
             switch(WriteBuffer[0]){
             case '4':
                 WriteFile(hPipe, Package, strlen(Package), &readed, NULL);
-                printf("Client: Tree (Readed byte - %d): \n", readed);
-                ReadFile(hPipe, ReadBuffer, 256, &readed, NULL);
-                printf("%s", ReadBuffer);
-                while(ReadBuffer[0] != 'G')
+                ReadFile(hPipe, ReadBuffer, 1, &readed, NULL);
+                if(ReadBuffer[0] == 1)
                 {
                     ReadFile(hPipe, ReadBuffer, 256, &readed, NULL);
                     printf("%s", ReadBuffer);
+                    while(ReadBuffer[0] != 'G')
+                    {
+                        ReadFile(hPipe, ReadBuffer, 256, &readed, NULL);
+                        printf("%s", ReadBuffer);
+                    }
                 }
+                else
+                {
+                    printf("Server: Root is NULL\n");
+                }
+                
                 break;
             case '6':
                 WriteFile(hPipe, Package, strlen(Package), &readed, NULL);
