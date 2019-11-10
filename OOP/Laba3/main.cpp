@@ -129,8 +129,6 @@ public:
     }
 };
 
-
-
 int main()
 {
     std::vector<Figure*> figures;
