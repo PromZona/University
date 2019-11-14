@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/dynamicArray.h
+iterator
+-
+memory
+-
+math.h
+-
+forwardIterator.h
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/forwardIterator.h
+
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/forwardIterator.h
+iterator
+-
+
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/main.cpp
+iostream
+-
+vector
+-
+algorithm
+-
+dynamicArray.h
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/dynamicArray.h
+forwardIterator.h
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba5/forwardIterator.h
+
