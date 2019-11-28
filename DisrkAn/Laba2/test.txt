@@ -1,0 +1,7 @@
++ a 1
++ b 2
++ g 3
+.
+! Save my.txt
+! Load my.txt
+.
