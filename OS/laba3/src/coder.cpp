@@ -5,7 +5,8 @@
 #include <math.h>
 #include <windows.h>
 
-//TODO: 43 строка - там получается надо 2 разных каунтера. 1 для прохода по строке, а другой для ведения записи того сколько сейчас битов записано.
+// 1 мб файл
+// ProcMon сколько потоков
 
 bool isPowerOfTwo(int n)
 {
@@ -90,7 +91,9 @@ int main()
     std::string messageToCode;
     int codeBitCount = 0;
     std::cout << "Enter bit sequnce\n>";
-    std::getline(std::cin, messageToCode);
+    std::ifstream stream;
+    stream.open("test1.txt");
+    std::getline(stream, messageToCode);
     for (int i = 0; i < messageToCode.size(); i++) // Correct input check
     {
         if (messageToCode[i] != '0' && messageToCode[i] != '1')
@@ -99,9 +102,15 @@ int main()
             return 0;
         }
     }
+    stream.close();
 
     std::cout << "Enter number of bits to code\n>";
     std::cin >> codeBitCount;
+    if (codeBitCount < 2)
+    {
+        std::cout << "Error: cannot code by control bit\n";
+        return 0;
+    }
 
     std::vector<std::vector<bool>> byteMessage = toHemmingCode(messageToCode, codeBitCount);
     std::ofstream mfile;

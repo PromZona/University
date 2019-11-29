@@ -195,14 +195,19 @@ int main(int argc, char **argv)
         }
         Message.push_back(buf);
     }
+    stream.close();
+
     decodeFile(Message);
+    std::ofstream streamo;
+    streamo.open("output.txt");
     for (int j = 0; j < Message.size(); j++)
     {
         for (int i = 0; i < Message[j].size(); i++)
         {
-            std::cout << Message[j][i];
+            streamo << Message[j][i];
         }
-        std::cout << std::endl;
+        streamo << std::endl;
     }
+    streamo.close();
     return 0;
 }
