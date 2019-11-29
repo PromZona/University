@@ -1,0 +1,36 @@
+https://zeromq.org/download/#windows
+
+ZeroMQ 4.0.4 - ýòî îäíà èç âîçìîæíûõ âåðñèé áèáëèîòåêè. Ìîæíî èñïîëüçîâàòü è äðóãèå âåðñèè
+
+
+Including the headers:
+•Right click Project -> Properties -> C/C++ -> General
+•Edit 'Additional Include Directories'
+•Add C:\Program Files\ZeroMQ 4.0.4\include
+•Right click 'Header Files' -> Add -> Existing Item -> C:\Program Files\ZeroMQ 4.0.4\include\zmq.h
+
+Adding the library dir:
+•Right click Project -> Properties -> Linker -> General
+•Edit 'Additional Library Directories'
+•Add C:\Program Files\ZeroMQ 4.0.4\lib\.
+
+Linking to the proper library:
+•Right click Project -> Properties -> General
+•Check "Platform Toolset", notice the version number (ex: v120)
+•Configuration Properties -> Linker -> Input
+•Edit 'Additional Dependencies'
+•Add appopriate toolset library (ex: libzmq-v120-mt-gd-4_0_4.lib) "-gd-" is the debug version
+
+Ensure your app is 64-bit
+•Build -> Configuration Manager
+•Active solution platform -> New...
+•Select x64
+•Copy settings from Win32
+•Right click Project -> Properties -> Linker -> All Options
+•Edit "Output File" set to ".\x64\Debug\whatever.exe"
+
+Include the pre-compiled dll as a resource for distribution
+•Right click Project -> Properties -> Build Events -> Post-Build Event
+•Edit "Command Line"
+•insert copy command
+copy /Y "C:\Program Files\ZeroMQ 4.0.4\bin\libzmq-v120-mt-gd-4_0_4.dll" "$(OutDir)"

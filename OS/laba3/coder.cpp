@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <bitset>
 #include <math.h>
 #include <windows.h>
 
@@ -47,12 +46,42 @@ std::vector<std::vector<bool>> toHemmingCode(std::string str, int codeBitCount)
             {
                 if (i >= str.size())
                     break;
-                binaryBuf.push_back(str[i]);
+                binaryBuf.push_back(str[i] == '1'? true : false);
                 i++;
             }
         }
         buf.push_back(binaryBuf);
     }
+
+    for (int i = 0; i < buf.size(); i++)
+    {
+        int countOfCodedBit = 0;
+
+        // Count of coded bit in sequnce
+        for (countOfCodedBit = 1;
+             pow(2, countOfCodedBit-1) < buf[i].size();
+             countOfCodedBit++)
+        {
+            int counter = 0;
+            for (int j = pow(2, countOfCodedBit-1) - 1; j < buf[i].size(); j += pow(2, countOfCodedBit-1))
+            {
+                int k = j;
+                for(k = j; k < j + pow(2, countOfCodedBit-1); k++)
+                {
+                    if(buf[i][k] == true)
+                    {
+                        counter++;
+                    } 
+                }
+                j = k;
+            }
+            if(counter % 2 == 0)
+            {
+                buf[i][pow(2, countOfCodedBit - 1) - 1] = true;
+            }
+        }
+    }
+
     return buf;
 }
 
@@ -60,8 +89,7 @@ int main()
 {
     std::string messageToCode;
     int codeBitCount = 0;
-    std::cout << isPowerOfTwo(1) << std::endl;
-    std::cout << "Enter bit sequence to code\n>";
+    std::cout << "Enter bit sequnce\n>";
     std::getline(std::cin, messageToCode);
     for (int i = 0; i < messageToCode.size(); i++) // Correct input check
     {
