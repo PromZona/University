@@ -1,0 +1,3 @@
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba6/CMakeFiles/rebuild_cache.dir
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba6/CMakeFiles/oop_exercise_06.dir
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OOP/Laba6/CMakeFiles/edit_cache.dir

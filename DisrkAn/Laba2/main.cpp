@@ -10,7 +10,7 @@ const int KEY_EXIST = 3;
 const int FILE_ERROR = 4;
 const int BLACK = 5;
 const int RED = 6;
-const int MAX_KEY_SIZE = 257;
+const int MAX_KEY_SIZE = 256;
 
 struct TDict{
     char Key[MAX_KEY_SIZE];
@@ -464,8 +464,8 @@ private:
 };
 
 int main(){
-    std::cin.tie(nullptr);
-    std::ios::sync_with_stdio(false);
+    // std::cin.tie(nullptr);
+    // std::ios::sync_with_stdio(false);
     TRBtree tree;
     char strbuf[257]; 
     TDict bufdict;
@@ -480,11 +480,11 @@ int main(){
                 }
                 try{
                     tree.Add(bufdict);
-                    std::cout << "OK\n";
+                    //std::cout << "OK\n";
                 }
                 catch(int a){
-                    if (a == KEY_EXIST) std::cout << "Exist\n";
-                    else std::cout << "ERROR: Something bad happened\n";
+                    //if (a == KEY_EXIST) std::cout << "Exist\n";
+                    //else std::cout << "ERROR: Something bad happened\n";
                 }
                 break;
             case '-':
@@ -494,20 +494,20 @@ int main(){
                 }
                 try{
                     tree.Erase(bufdict);
-                    std::cout << "OK\n";
+                    //std::cout << "OK\n";
                 }
                 catch(int a){
-                    if (a == DOES_NOT_EXIST) std::cout << "NoSuchWord\n";
-                    else std::cout << "ERROR: Something bad happened\n";
+                    //if (a == DOES_NOT_EXIST) std::cout << "NoSuchWord\n";
+                    //else std::cout << "ERROR: Something bad happened\n";
                 }
                 break;
             case '!':
                 try{
                     tree.SaveOrLoad();
-                    std::cout << "OK\n";
+                    //std::cout << "OK\n";
                 }
                 catch(int a){
-                    std::cout << "ERROR: Work with file completed wrong\n";
+                    //std::cout << "ERROR: Work with file completed wrong\n";
                 }
                 break;
             default:
@@ -517,10 +517,10 @@ int main(){
                 }
                 try{
                     unsigned long long a = tree.Find(bufdict);
-                    std::cout << "OK: " << a << std::endl;
+                    //std::cout << "OK: " << a << std::endl;
                 }
                 catch(int a){
-                    std::cout << "NoSuchWord\n";
+                    //std::cout << "NoSuchWord\n";
                 }
                 break;
         }

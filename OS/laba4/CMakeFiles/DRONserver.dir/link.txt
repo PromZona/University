@@ -1,0 +1,1 @@
+/usr/bin/cc   -Wl,--enable-auto-import CMakeFiles/DRONserver.dir/server.c.o  -o DRONserver.exe -Wl,--out-implib,libDRONserver.dll.a -Wl,--major-image-version,0,--minor-image-version,0 

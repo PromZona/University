@@ -1,0 +1,4 @@
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OS/laba4/CMakeFiles/rebuild_cache.dir
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OS/laba4/CMakeFiles/edit_cache.dir
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OS/laba4/CMakeFiles/DRONmain.dir
+/cygdrive/d/YaDisk/YandexDisk/МАИ/Andrew/2 курс/labs/University/OS/laba4/CMakeFiles/DRONserver.dir
