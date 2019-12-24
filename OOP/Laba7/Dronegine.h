@@ -40,11 +40,9 @@ enum COLOUR
 	BG_WHITE = 0x00F0,
 };
 
-
-
 class Dronegine
 {
-public: 
+public:
 	Dronegine()
 	{
 		SizeX = 80;
@@ -66,14 +64,14 @@ public:
 		SizeX = ConsoleSizeX;
 		SizeY = ConsoleSizeY;
 
-		SMALL_RECT zeroWindow = { 0, 0, 0, 0 };
+		SMALL_RECT zeroWindow = {0, 0, 0, 0};
 
 		SetConsoleWindowInfo(hConsoleOut, TRUE, &zeroWindow);
-		SetConsoleScreenBufferSize(hConsoleOut, { 1, 1 });
+		SetConsoleScreenBufferSize(hConsoleOut, {1, 1});
 
-		rectWindow = { 0, 0, (short)SizeX - 1, (short)SizeY - 1 };
-		
-		if (!SetConsoleScreenBufferSize(hConsoleOut, { (short)SizeX, (short)SizeY }))
+		rectWindow = {0, 0, (short)SizeX - 1, (short)SizeY - 1};
+
+		if (!SetConsoleScreenBufferSize(hConsoleOut, {(short)SizeX, (short)SizeY}))
 			return -2;
 		if (!SetConsoleWindowInfo(hConsoleOut, TRUE, &rectWindow))
 			return -1;
@@ -83,15 +81,16 @@ public:
 		return 1;
 	}
 
-	int DrawCube(int Xpos,int Ypos, int Size, char symbol = 'X', short color = FG_WHITE)
+	int DrawCube(int Xpos, int Ypos, int Size, char symbol = 'X', short color = FG_WHITE)
 	{
 		if (Xpos >= 0 && Ypos >= 0 && Xpos <= SizeX && Ypos <= SizeY && Xpos + Size <= SizeX && Ypos + Size <= SizeY)
 		{
-			for (int x = Xpos; x < Xpos + Size; x++)			
-				for (int y = Ypos; y < Ypos + Size; y++)			
-					Draw(x, y, symbol, color);			
+			for (int x = Xpos; x < Xpos + Size; x++)
+				for (int y = Ypos; y < Ypos + Size; y++)
+					Draw(x, y, symbol, color);
 		}
-		else return -2;
+		else
+			return -2;
 
 		return 1;
 	}
@@ -108,7 +107,7 @@ public:
 
 	int Render()
 	{
-		if (!WriteConsoleOutput(hConsoleOut, ScreenBuffer, { (short)SizeX, (short)SizeY }, { 0,0 }, &rectWindow))
+		if (!WriteConsoleOutput(hConsoleOut, ScreenBuffer, {(short)SizeX, (short)SizeY}, {0, 0}, &rectWindow))
 		{
 			return -2;
 		}
@@ -148,7 +147,6 @@ public:
 	virtual bool Update(float fElapsedTime) = 0;
 
 private:
-
 	void NullingScreenBuffer()
 	{
 		for (int i = 0; i < SizeX * SizeY; i++)
@@ -174,10 +172,10 @@ private:
 
 			float fElapsedTime = elapsedTime.count();
 			time_t t1 = chrono::system_clock::to_time_t(time2);
-			int TimeNow = static_cast<int> (t1);
+			int TimeNow = static_cast<int>(t1);
 
-
-			if (!Update(fElapsedTime))	GameIsActive = false;
+			if (!Update(fElapsedTime))
+				GameIsActive = false;
 			Render();
 
 			Sleep(16.666f - fElapsedTime);
@@ -222,8 +220,8 @@ private:
 	bool GameIsActive;
 
 protected:
-	short m_keyOldState[256] = { 0 };
-	short m_keyNewState[256] = { 0 };
+	short m_keyOldState[256] = {0};
+	short m_keyNewState[256] = {0};
 	struct sKeyState
 	{
 		bool bPressed;
