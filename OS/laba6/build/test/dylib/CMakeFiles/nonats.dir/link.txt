@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c99 -pedantic -pthread -Wall -W -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wstrict-prototypes -Wwrite-strings -O3 -DNDEBUG  -Wl,--enable-auto-import CMakeFiles/nonats.dir/nonats.c.o  -o nonats.exe -Wl,--out-implib,libnonats.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ../../src/libnats.dll.a -lrt 

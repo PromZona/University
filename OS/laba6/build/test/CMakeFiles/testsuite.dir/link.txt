@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c99 -pedantic -pthread -Wall -W -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wstrict-prototypes -Wwrite-strings -O3 -DNDEBUG  -Wl,--enable-auto-import CMakeFiles/testsuite.dir/test.c.o  -o testsuite.exe -Wl,--out-implib,libtestsuite.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ../src/libnats_static.a -lrt 

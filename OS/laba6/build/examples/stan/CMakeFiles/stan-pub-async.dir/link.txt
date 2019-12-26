@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c99 -pedantic -pthread -Wall -W -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wstrict-prototypes -Wwrite-strings -O3 -DNDEBUG  -Wl,--enable-auto-import CMakeFiles/stan-pub-async.dir/pub-async.c.o  -o stan-pub-async.exe -Wl,--out-implib,libstan-pub-async.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ../../src/libnats.dll.a -lrt 
